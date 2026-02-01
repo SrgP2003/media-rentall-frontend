@@ -14,7 +14,16 @@ const goToPage = (page) => {
 };
 
 const pageLinks = computed(() => {
-  return props.meta.links?.filter(link => link && link.page !== null) || [];
+  const links = props.meta.links?.filter(link => link && link.page !== null) || [];
+  const uniquePages = new Map();
+  
+  links.forEach(link => {
+    if (!uniquePages.has(link.page)) {
+      uniquePages.set(link.page, link);
+    }
+  });
+  
+  return Array.from(uniquePages.values()).sort((a, b) => a.page - b.page);
 });
 </script>
 
@@ -39,8 +48,8 @@ const pageLinks = computed(() => {
       </button>
 
       <button
-        v-for="link in pageLinks"
-        :key="link.label"
+        v-for="(link, index) in pageLinks"
+        :key="`page-${link.page}-${index}`"
         @click="goToPage(link.page)"
         class="px-3 py-2 rounded-md border text-sm"
         :class="

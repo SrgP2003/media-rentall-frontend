@@ -17,6 +17,8 @@ const confirmModal = reactive({
   newStatus: null,
 });
 
+const createModal = ref(false);
+
 const columns = [
   { key: "id", label: "ID" },
   { key: "customer", label: "Cliente" },
@@ -33,16 +35,18 @@ const statusOptions = [
   { value: "cancelled", label: "Cancelado" },
 ];
 
-const loadBookings = () => {
-  fetchBookings({
+const loadBookings = async () => {
+  if (loading.value) return;
+  await fetchBookings({
     page: page.value,
     status: statusFilter.value || null,
   });
 };
 
-const handlePageChange = (newPage) => {
+const handlePageChange = async (newPage) => {
+  if (loading.value || newPage === page.value) return;
   page.value = newPage;
-  loadBookings();
+  await loadBookings();
 };
 
 const openConfirmModal = (bookingId, newStatus) => {
@@ -94,9 +98,18 @@ const viewDetail = (id) => {
   navigateTo(`/booking/${id}`);
 };
 
-watch(statusFilter, () => {
-  page.value = 1;
+const handleCreateSuccess = () => {
+  modal.type = "success";
+  modal.title = "Creada";
+  modal.message = "La reservación se creó correctamente";
+  modal.open = true;
   loadBookings();
+};
+
+watch(statusFilter, async () => {
+  if (loading.value) return;
+  page.value = 1;
+  await loadBookings();
 });
 
 onMounted(() => {
@@ -108,6 +121,13 @@ onMounted(() => {
   <div class="space-y-6">
     <div class="flex items-center justify-between">
       <h1 class="text-2xl font-bold text-gray-900">Reservaciones</h1>
+
+      <button
+        @click="createModal = true"
+        class="px-4 py-2 rounded-md bg-indigo-600 hover:bg-indigo-500 text-white font-medium"
+      >
+        Nueva Reservación
+      </button>
     </div>
 
     <div class="flex gap-4">
@@ -209,5 +229,11 @@ onMounted(() => {
         </div>
       </div>
     </UiBaseModal>
+
+    <BookingCreateForm
+      :open="createModal"
+      @close="createModal = false"
+      @success="handleCreateSuccess"
+    />
   </div>
 </template>

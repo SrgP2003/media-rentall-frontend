@@ -94,7 +94,7 @@ export const useBookings = () => {
     try {
       const response = await $api(`/bookings/${id}/status`, {
         method: "PATCH",
-        body: JSON.stringify({ status }),
+        body: { status },
       });
 
       if (booking.value?.id === id) {

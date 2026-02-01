@@ -3,7 +3,12 @@ export const useAuth = () => {
   const config = useRuntimeConfig();
 
   const user = useState("user", () => null);
-  const token = useState("token", () => null);
+  const token = useState("token", () => {
+    if (process.client) {
+      return localStorage.getItem("token") || null;
+    }
+    return null;
+  });
   const loading = ref(false);
   const errors = ref(null);
 
@@ -22,7 +27,10 @@ export const useAuth = () => {
 
       token.value = response.token;
 
-      // Obtiene el usuario autenticado usando el token
+      if (process.client) {
+        localStorage.setItem("token", response.token);
+      }
+
       user.value = await $api("/user");
 
       await navigateTo("/media");
@@ -63,13 +71,17 @@ export const useAuth = () => {
     }
   };
 
-  // Logout
   const logout = async () => {
     loading.value = true;
     user.value = null;
     token.value = null;
+    
+    if (process.client) {
+      localStorage.removeItem("token");
+    }
+    
     loading.value = false;
-    await navigateTo("/");
+    await navigateTo("/auth/login");
   };
 
   const isAuthenticated = computed(() => !!token.value);
