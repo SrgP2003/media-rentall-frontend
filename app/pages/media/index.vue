@@ -19,28 +19,25 @@ const changePage = (page) => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-900 px-6 py-8">
-    <div class="max-w-7xl mx-auto space-y-6">
+  <div class="space-y-6">
       <div>
         <h1 class="text-3xl font-semibold text-white">Medios publicitarios</h1>
-        <p class="text-gray-400 mt-1">
-          Listado de medios disponibles para renta
-        </p>
+            <h1 class="text-2xl font-bold text-gray-900">LIstado de medios disponibles para renta</h1>
       </div>
 
       <div
-        class="bg-gray-800 border border-gray-700 rounded-xl p-4 grid grid-cols-1 md:grid-cols-4 gap-4"
+        class="bg-white border border-gray-300 rounded-xl p-4 grid grid-cols-1 md:grid-cols-4 gap-4"
       >
         <input
           v-model="filters.search"
           type="text"
           placeholder="Buscar por nombre o ubicación"
-          class="col-span-1 md:col-span-2 rounded-lg bg-gray-900 border border-gray-700 text-white px-4 py-2 focus:ring-2 focus:ring-indigo-500"
+          class="col-span-1 md:col-span-2 rounded-lg bg-white border border-gray-300 text-gray-900 px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
         />
 
         <select
           v-model="filters.type"
-          class="rounded-lg bg-gray-900 border border-gray-700 text-white px-4 py-2"
+          class="rounded-lg bg-white border border-gray-300 text-gray-900 px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
         >
           <option value="">Todos los tipos</option>
           <option value="billboard">Billboard</option>
@@ -50,7 +47,7 @@ const changePage = (page) => {
 
         <select
           v-model="filters.status"
-          class="rounded-lg bg-gray-900 border border-gray-700 text-white px-4 py-2"
+          class="rounded-lg bg-white border border-gray-300 text-gray-900 px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
         >
           <option value="">Todos los estados</option>
           <option value="active">Activo</option>
@@ -80,47 +77,65 @@ const changePage = (page) => {
         <div
           v-for="item in media"
           :key="item.id"
-          class="bg-gray-800 border border-gray-700 rounded-xl p-5 flex flex-col justify-between"
+          class="bg-white border border-gray-300 rounded-xl p-6 flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow"
         >
-          <div class="space-y-2">
-            <div class="flex justify-between items-start">
-              <h2 class="text-lg font-semibold text-white">
+          <div class="space-y-3">
+            <div class="flex justify-between items-start gap-3">
+              <h2 class="text-lg font-bold text-gray-900 leading-tight">
                 {{ item.name }}
               </h2>
               <span
-                class="text-xs px-2 py-1 rounded-full"
+                class="text-xs px-2.5 py-1 rounded-full font-medium flex-shrink-0"
                 :class="
                   item.status === 'active'
-                    ? 'bg-green-500/20 text-green-400'
-                    : 'bg-gray-500/20 text-gray-400'
+                    ? 'bg-green-500/20 text-green-600'
+                    : 'bg-gray-500/20 text-gray-600'
                 "
               >
                 {{ item.status }}
               </span>
             </div>
 
-            <p class="text-sm text-gray-400">
-              {{ item.location }}
-            </p>
+            <div class="space-y-2">
+              <div class="flex items-start gap-2">
+                <svg class="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+                <p class="text-sm text-gray-600 leading-relaxed">
+                  {{ item.location }}
+                </p>
+              </div>
 
-            <p class="text-sm text-gray-300">
-              Tipo: <span class="font-medium">{{ item.type }}</span>
-            </p>
+              <div class="pt-2 border-t border-gray-200 space-y-1.5">
+                <p class="text-sm text-gray-700">
+                  <span class="font-medium text-gray-900">Tipo:</span> 
+                  <span class="capitalize">{{ item.type }}</span>
+                </p>
 
-            <p class="text-sm text-gray-300">
-              Dimensiones: {{ item.dimensions }}
-            </p>
+                <p class="text-sm text-gray-700">
+                  <span class="font-medium text-gray-900">Dimensiones:</span> 
+                  {{ item.dimensions }}
+                </p>
+              </div>
+            </div>
 
-            <p class="text-lg font-semibold text-indigo-400">
-              ${{ item.price_per_day }} / día
-            </p>
+            <div class="pt-3 border-t border-gray-200">
+              <p class="text-2xl font-bold text-indigo-600">
+                ${{ item.price_per_day }}
+                <span class="text-sm font-normal text-gray-500">/ día</span>
+              </p>
+            </div>
           </div>
 
           <NuxtLink
             :to="`/media/${item.id}`"
-            class="mt-4 inline-flex justify-center rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white py-2 text-sm font-medium transition"
+            class="mt-5 inline-flex justify-center items-center gap-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 text-sm font-semibold transition"
           >
             Ver detalle
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
           </NuxtLink>
         </div>
       </div>
@@ -133,23 +148,22 @@ const changePage = (page) => {
         <button
           @click="changePage(pagination.page - 1)"
           :disabled="pagination.page === 1"
-          class="px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white disabled:opacity-40"
+          class="px-4 py-2 rounded-lg bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition font-medium"
         >
           Anterior
         </button>
 
-        <span class="text-gray-400">
+        <span class="text-gray-600 font-medium">
           Página {{ pagination.page }} de {{ pagination.lastPage }}
         </span>
 
         <button
           @click="changePage(pagination.page + 1)"
           :disabled="pagination.page === pagination.lastPage"
-          class="px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white disabled:opacity-40"
+          class="px-4 py-2 rounded-lg bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition font-medium"
         >
           Siguiente
         </button>
       </div>
-    </div>
   </div>
 </template>

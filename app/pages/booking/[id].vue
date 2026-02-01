@@ -25,11 +25,13 @@ const closeConfirmModal = () => {
 };
 
 const confirmStatusChange = async () => {
+  const newStatus = confirmModal.newStatus;
+  
   closeConfirmModal();
 
   const { success } = await updateBookingStatus(
     route.params.id,
-    confirmModal.newStatus
+    newStatus
   );
 
   if (success) {

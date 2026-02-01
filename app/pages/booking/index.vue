@@ -62,18 +62,18 @@ const closeConfirmModal = () => {
 };
 
 const confirmStatusChange = async () => {
+  const bookingId = confirmModal.bookingId;
+  const newStatus = confirmModal.newStatus;
+  
   closeConfirmModal();
 
-  const { success } = await updateBookingStatus(
-    confirmModal.bookingId,
-    confirmModal.newStatus
-  );
+  const { success } = await updateBookingStatus(bookingId, newStatus);
 
   if (success) {
     modal.type = "success";
     modal.title = "Actualizado";
     modal.message = "El estado de la reservación se actualizó correctamente";
-    loadBookings();
+    await loadBookings();
   } else {
     modal.type = "error";
     modal.title = "Error";
